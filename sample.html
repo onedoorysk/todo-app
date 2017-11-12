@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+    body[load] {
+      opacity: 0;
+    } 
+    
+    body[load]::before {
+      content: "";
+      display: block;
+      position: absolute;
+      height: 100vh;
+      width: 100vw;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      margin: auto;
+    }
+  
+  </style>
+</head>
+<body load>
+<script>
+  window.onload = () => {
+    const body = document.getElementById('body')
+    body.removeAttribute('load')
+  }
+</script>
+</body>
+</html>
+
+
+<!--
+DOMに状態を持たせる方法
+1.任意の属性名でDOMに設定する方法
+2.classを作ってstateで管理する方法
+-->
+
+<!--
+
+Array LikeなオブジェクトをArrayにする方法
+var target = [...document.querySelectorAll('array')] → デストラクタ
+
+var target = document.quwrySelectorAll('array')
+Array.prototype.slice.call(target)
+
+
+-->

@@ -18,51 +18,55 @@ class App extends Component {
   }
   
   toggleTask (state, id) {
-    // const {tasks} = state
-    const tasks = state.tasks.map(task => {
+    const {tasks} = state
+    const newTasks = tasks.map(task => {
       if (task.id !== id) {
         return {...task}
       }
       return {...task, completed: !task.completed}
     })
-    const newState =  {...state, tasks}
+    const newState =  {...state, tasks: newTasks}
     localStorage.setItem('myTODO', JSON.stringify(newState))
     return newState
     
   }
   
-  addTask (description) {
+  addTask (description = 'New Task!') {
   
     if(!description) {
       alert('入力してください。')
       return
     }
-    // const {tasks} = this.state
+    const {tasks} = this.state
     // ユニークなプロパティを持つオブジェクトの場合は後ろに追加される
-    const tasks = [...this.state.tasks, {id: v4(), description, completed: false}]
-    const newState = {...this.state, tasks}
+    const newTasks = [...tasks, {id: v4(), description: description, completed: false}]
+    const newState = {...this.state, tasks: newTasks}
     
     localStorage.setItem('myTODO', JSON.stringify(newState))
     this.setState(newState)
   }
   
+  
   render() {
     const {tasks} = this.state
     return (
       <div>
-        <MyForm myEvent={desc => this.addTask(desc)}/>
+        <MyForm myEvent={(desc) => this.addTask(desc)}/>
         <ul>
-          {tasks.map(({id, completed, description}) => (
-            <li 
-              key={id} 
-              style={{
-                textDecoration: completed ? 'line-through' : 'none'
+          {tasks.map((task) => {
+            
+            // 丸括弧にすることでreactの世界になる
+            return (
+              <li key={task.id} style={{
+                textDecoration: task.completed ? 'line-through' : 'none'
               }} 
-              onClick={() => this.setState(this.toggleTask(this.state, id))}
-            >
-              {description}
-            </li>
-          ))}
+              onClick={() => {
+                this.setState(this.toggleTask(this.state, task.id))}
+              }>
+                {task.description}
+              </li>
+            )
+          })}
         </ul>
       </div>
     );

@@ -1,16 +1,18 @@
 import React from 'react'
 
-export default (props) => (
-  <div>
-    <input type="text" />
-    <button onClick={props.onClick}>ADD</button>
-  </div>
-)
+export default ({myEvent}) => {
+  let input = null
+  // refは初期表示時にDOMの参照を渡す
+  return  (
+    <div>
+      <input ref={node => input = node} type="text" />
+      <button onClick={() => {
+          myEvent(input.value)
+          input.value = ''
+        }
+      }>ADD</button>
+    </div>
+  )
+}
 
-// listで並べるようにしたい
-// listで
-
-
-// const newArr = [...arr, 5]
-// pushを使うと壊れる
-// 浅いコピーはしない　
+// 非破壊　array.filterを使って all complited not complitedの３つのボタンを作る。
