@@ -13,12 +13,13 @@ class App extends Component {
     }
     
     this.state = persistState ? persistState : {
-      tasks: []
+      tasks: [],
+      displayTasks: [],
+      displayAll: true
     }
   }
-  
+
   toggleTask (state, id) {
-    // const {tasks} = state
     const tasks = state.tasks.map(task => {
       if (task.id !== id) {
         return {...task}
@@ -28,7 +29,6 @@ class App extends Component {
     const newState =  {...state, tasks}
     localStorage.setItem('myTODO', JSON.stringify(newState))
     return newState
-    
   }
   
   addTask (description) {
@@ -37,8 +37,6 @@ class App extends Component {
       alert('入力してください。')
       return
     }
-    // const {tasks} = this.state
-    // ユニークなプロパティを持つオブジェクトの場合は後ろに追加される
     const tasks = [...this.state.tasks, {id: v4(), description, completed: false}]
     const newState = {...this.state, tasks}
     
@@ -46,13 +44,32 @@ class App extends Component {
     this.setState(newState)
   }
   
+  filterTaskAll () {
+    const newState = {...this.state, displayAll: true}
+    this.setState(newState)
+  }
+  
+  filterTask (completedFlag) {
+    const displayTasks = this.state.tasks.filter(task => {
+      if (task.completed === completedFlag) {
+        return {...task}
+      }
+    })
+    const newState = {...this.state, displayTasks, displayAll: false}
+    this.setState(newState)
+  }
+  
   render() {
-    const {tasks} = this.state
+    const {tasks, displayTasks, displayAll} = this.state
+    const targetTasks = displayAll ? tasks : displayTasks
     return (
       <div>
         <MyForm myEvent={desc => this.addTask(desc)}/>
+        <button onClick={() => this.filterTaskAll()}>ALL</button>
+        <button onClick={() => this.filterTask(true)}>COMPLETED</button>
+        <button onClick={() => this.filterTask(false)}>NOT COMPLETED</button>
         <ul>
-          {tasks.map(({id, completed, description}) => (
+          {targetTasks.map(({id, completed, description}) => (
             <li 
               key={id} 
               style={{

@@ -14,5 +14,3 @@ export default ({myEvent}) => {
     </div>
   )
 }
-
-// 非破壊　array.filterを使って all complited not complitedの３つのボタンを作る。
