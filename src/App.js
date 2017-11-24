@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import MyForm from './components/MyForm'
+import FilterButton from './components/FilterButton'
+import TodoList from './components/TodoList'
 import v4 from 'uuid/v4'
 
 class App extends Component {
@@ -25,9 +27,9 @@ class App extends Component {
       }
       return {...task, completed: !task.completed}
     })
-    const newState =  {...state, tasks}
+    const newState = {...this.state, tasks}
     localStorage.setItem('myTODO', JSON.stringify(newState))
-    return newState
+    this.setState(newState)
   }
   
   addTask (description) {
@@ -64,26 +66,11 @@ class App extends Component {
     const tasks = this.filter(this.state)
     return (
       <div>
-        <MyForm myEvent={desc => this.addTask(desc)}/>
-        <button onClick={() => this.setState(this.changeSelectedBtn(this.state, 'all'))}>ALL</button>
-        <button onClick={() => this.setState(this.changeSelectedBtn(this.state, 'completed'))}>COMPLETED</button>
-        <button onClick={() => this.setState(this.changeSelectedBtn(this.state, 'not completed'))}>NOT COMPLETED</button>
-        <ul>
-          {
-            tasks.map(({id, completed, description}) => (
-            <li 
-              key={id}
-              style={
-                {
-                  textDecoration: completed ? 'line-through' : 'none',
-                }
-              } 
-              onClick={() => this.setState(this.toggleTask(this.state, id))}
-            >
-              {description}
-            </li>
-          ))}
-        </ul>
+        <MyForm myEvent={desc => this.addTask(desc)} />
+        <FilterButton myEvent={() => this.changeSelectedBtn(this.state, 'all')} btnName="ALL" />
+        <FilterButton myEvent={() => this.changeSelectedBtn(this.state, 'completed')} btnName="COMPLETED" />
+        <FilterButton myEvent={() => this.changeSelectedBtn(this.state, 'not completed')} btnName="NOT COMPLETED" />
+        <TodoList tasks={tasks} myEvent={(id) => this.toggleTask(this.state, id)} />
       </div>
     );
   }
