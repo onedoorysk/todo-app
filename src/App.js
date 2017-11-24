@@ -14,8 +14,7 @@ class App extends Component {
     
     this.state = persistState ? persistState : {
       tasks: [],
-      displayTasks: [],
-      displayAll: true
+      selectedBtn: 'all'
     }
   }
 
@@ -32,8 +31,7 @@ class App extends Component {
   }
   
   addTask (description) {
-  
-    if(!description) {
+    if (!description) {
       alert('入力してください。')
       return
     }
@@ -44,37 +42,42 @@ class App extends Component {
     this.setState(newState)
   }
   
-  filterTaskAll () {
-    const newState = {...this.state, displayAll: true}
-    this.setState(newState)
+  changeSelectedBtn(state, targetBtn) {
+    const selectedBtn = targetBtn
+    this.setState({selectedBtn})
   }
   
-  filterTask (completedFlag) {
-    const displayTasks = this.state.tasks.filter(task => {
-      if (task.completed === completedFlag) {
-        return {...task}
+  filter(state) {
+    const tasks = state.tasks.filter((task) => {
+      if (state.selectedBtn === 'completed') {
+         return (task.completed === true)
       }
+      else if (state.selectedBtn === 'not completed') {
+        return (task.completed === false)
+      }
+      return task
     })
-    const newState = {...this.state, displayTasks, displayAll: false}
-    this.setState(newState)
+    return tasks
   }
-  
+
   render() {
-    const {tasks, displayTasks, displayAll} = this.state
-    const targetTasks = displayAll ? tasks : displayTasks
+    const tasks = this.filter(this.state)
     return (
       <div>
         <MyForm myEvent={desc => this.addTask(desc)}/>
-        <button onClick={() => this.filterTaskAll()}>ALL</button>
-        <button onClick={() => this.filterTask(true)}>COMPLETED</button>
-        <button onClick={() => this.filterTask(false)}>NOT COMPLETED</button>
+        <button onClick={() => this.setState(this.changeSelectedBtn(this.state, 'all'))}>ALL</button>
+        <button onClick={() => this.setState(this.changeSelectedBtn(this.state, 'completed'))}>COMPLETED</button>
+        <button onClick={() => this.setState(this.changeSelectedBtn(this.state, 'not completed'))}>NOT COMPLETED</button>
         <ul>
-          {targetTasks.map(({id, completed, description}) => (
+          {
+            tasks.map(({id, completed, description}) => (
             <li 
-              key={id} 
-              style={{
-                textDecoration: completed ? 'line-through' : 'none'
-              }} 
+              key={id}
+              style={
+                {
+                  textDecoration: completed ? 'line-through' : 'none',
+                }
+              } 
               onClick={() => this.setState(this.toggleTask(this.state, id))}
             >
               {description}
