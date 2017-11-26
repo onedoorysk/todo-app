@@ -1,14 +1,14 @@
 import React from 'react'
 
-export default ({task, myEvent}) => {
-  const {id, description, completed} = task
+export default ({key, attr, $parent}) => {
+  const {id, description, completed} = attr
   return (
     <li
-      key={id}
+      key={key}
       style={
         { textDecoration: completed ? 'line-through' : 'none' }
       }
-      onClick={() => myEvent(id)}
+      onClick={() => $parent(id)}
     >{description}
     </li>
   )

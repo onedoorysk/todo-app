@@ -29,7 +29,7 @@ class App extends Component {
     })
     const newState = {...this.state, tasks}
     localStorage.setItem('myTODO', JSON.stringify(newState))
-    this.setState(newState)
+    return newState
   }
   
   addTask (description) {
@@ -51,26 +51,27 @@ class App extends Component {
   
   filter(state) {
     const tasks = state.tasks.filter((task) => {
-      if (state.selectedBtn === 'completed') {
-         return (task.completed === true)
+      switch(state.selectedBtn) {
+        case 'completed' :
+          return task.completed
+        case 'not completed' :
+          return !task.completed
+        default:
+          return task
       }
-      else if (state.selectedBtn === 'not completed') {
-        return (task.completed === false)
-      }
-      return task
     })
     return tasks
   }
 
   render() {
-    const tasks = this.filter(this.state)
+    const {tasks, selectedBtn} = this.state
     return (
       <div>
         <MyForm myEvent={desc => this.addTask(desc)} />
-        <FilterButton myEvent={() => this.changeSelectedBtn(this.state, 'all')} btnName="ALL" />
-        <FilterButton myEvent={() => this.changeSelectedBtn(this.state, 'completed')} btnName="COMPLETED" />
-        <FilterButton myEvent={() => this.changeSelectedBtn(this.state, 'not completed')} btnName="NOT COMPLETED" />
-        <TodoList tasks={tasks} myEvent={(id) => this.toggleTask(this.state, id)} />
+        <FilterButton onClick={() => this.setState((prev) => ({...prev, selectedBtn: 'all'}))}>ALL</FilterButton>
+        <FilterButton onClick={() => this.setState((prev) => ({...prev, selectedBtn: 'completed'}))}>COMPLETED</FilterButton>
+        <FilterButton onClick={() => this.setState((prev) => ({...prev, selectedBtn: 'not completed'}))}>NOT COMPLETED</FilterButton>
+        <TodoList tasks={tasks} selectedBtn={selectedBtn} $parent={(id) => this.setState(this.toggleTask(this.state, id))} />
       </div>
     );
   }
