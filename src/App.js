@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import MyForm from './components/MyForm'
 import FilterButton from './components/FilterButton'
 import TodoList from './components/TodoList'
-import {addTodoAction, toggleTodoAction, selectedBtnAction} from './actions/index'
+import {selectedBtnAction} from './actions/index'
 import store from './store'
 
 class App extends Component {
@@ -13,9 +13,9 @@ class App extends Component {
     return (
       <div>
         <MyForm />
-        <FilterButton onClick={() => store.dispatch(selectedBtnAction('all'))}>ALL</FilterButton>
-        <FilterButton onClick={() => store.dispatch(selectedBtnAction('completed'))}>COMPLETED</FilterButton>
-        <FilterButton onClick={() => store.dispatch(selectedBtnAction('not completed'))}>NOT COMPLETED</FilterButton>
+        <FilterButton btnName='all' >ALL</FilterButton>
+        <FilterButton btnName='completed' >COMPLETED</FilterButton>
+        <FilterButton btnName='not completed' >NOT COMPLETED</FilterButton>
         <TodoList tasks={tasks} selectedBtn={selectedBtn} />
       </div>
     );
