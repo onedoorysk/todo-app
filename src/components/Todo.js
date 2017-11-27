@@ -1,6 +1,8 @@
 import React from 'react'
+import store from '../store'
+import {toggleTodoAction} from '../actions/index'
 
-export default ({key, attr, $parent}) => {
+export default ({key, attr}) => {
   const {id, description, completed} = attr
   return (
     <li
@@ -8,7 +10,7 @@ export default ({key, attr, $parent}) => {
       style={
         { textDecoration: completed ? 'line-through' : 'none' }
       }
-      onClick={() => $parent(id)}
+      onClick={() => store.dispatch(toggleTodoAction(id))}
     >{description}
     </li>
   )

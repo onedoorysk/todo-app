@@ -12,11 +12,11 @@ class App extends Component {
     const selectedBtn = store.getState().btn
     return (
       <div>
-        <MyForm myEvent={desc => store.dispatch(addTodoAction(desc))} />
+        <MyForm />
         <FilterButton onClick={() => store.dispatch(selectedBtnAction('all'))}>ALL</FilterButton>
         <FilterButton onClick={() => store.dispatch(selectedBtnAction('completed'))}>COMPLETED</FilterButton>
         <FilterButton onClick={() => store.dispatch(selectedBtnAction('not completed'))}>NOT COMPLETED</FilterButton>
-        <TodoList tasks={tasks} selectedBtn={selectedBtn} $parent={(id) => store.dispatch(toggleTodoAction(id))} />
+        <TodoList tasks={tasks} selectedBtn={selectedBtn} />
       </div>
     );
   }
