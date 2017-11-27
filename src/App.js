@@ -2,55 +2,21 @@ import React, { Component } from 'react'
 import MyForm from './components/MyForm'
 import FilterButton from './components/FilterButton'
 import TodoList from './components/TodoList'
-import v4 from 'uuid/v4'
+import {addTodoAction, toggleTodoAction, selectedBtnAction} from './actions/index'
+import store from './store'
 
 class App extends Component {
-  constructor(props) {
-    super(props)
-    
-    const serializeState = localStorage.getItem('myTODO')
-    let persistState = null
-    if (serializeState !== null) {
-      persistState = JSON.parse(serializeState)
-    }
-    
-    this.state = persistState ? persistState : {
-      tasks: [],
-      selectedBtn: 'all'
-    }
-  }
-
-  toggleTask (state, id) {
-    const tasks = state.tasks.map(task => {
-      if (task.id !== id) return {...task}
-      return {...task, completed: !task.completed}
-    })
-    const newState = {...this.state, tasks}
-    localStorage.setItem('myTODO', JSON.stringify(newState))
-    return newState
-  }
-  
-  addTask (description) {
-    if (!description) {
-      alert('入力してください。')
-      return
-    }
-    const tasks = [...this.state.tasks, {id: v4(), description, completed: false}]
-    const newState = {...this.state, tasks}
-    
-    localStorage.setItem('myTODO', JSON.stringify(newState))
-    this.setState(newState)
-  }
 
   render() {
-    const {tasks, selectedBtn} = this.state
+    const tasks = store.getState().todo
+    const selectedBtn = store.getState().btn
     return (
       <div>
-        <MyForm myEvent={desc => this.addTask(desc)} />
-        <FilterButton onClick={() => this.setState(prev => ({...prev, selectedBtn: 'all'}))}>ALL</FilterButton>
-        <FilterButton onClick={() => this.setState(prev => ({...prev, selectedBtn: 'completed'}))}>COMPLETED</FilterButton>
-        <FilterButton onClick={() => this.setState(prev => ({...prev, selectedBtn: 'not completed'}))}>NOT COMPLETED</FilterButton>
-        <TodoList tasks={tasks} selectedBtn={selectedBtn} $parent={(id) => this.setState(this.toggleTask(this.state, id))} />
+        <MyForm myEvent={desc => store.dispatch(addTodoAction(desc))} />
+        <FilterButton onClick={() => store.dispatch(selectedBtnAction('all'))}>ALL</FilterButton>
+        <FilterButton onClick={() => store.dispatch(selectedBtnAction('completed'))}>COMPLETED</FilterButton>
+        <FilterButton onClick={() => store.dispatch(selectedBtnAction('not completed'))}>NOT COMPLETED</FilterButton>
+        <TodoList tasks={tasks} selectedBtn={selectedBtn} $parent={(id) => store.dispatch(toggleTodoAction(id))} />
       </div>
     );
   }
