@@ -3,8 +3,7 @@ import Todo from './Todo'
 
 export default ({tasks, selectedBtn, $parent}) => (
   <ul>
-    {
-      tasks.filter(({completed}) => {
+    {tasks.filter(({completed}) => {
         switch(selectedBtn) {
           case 'completed':
             return completed
