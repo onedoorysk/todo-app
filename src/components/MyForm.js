@@ -2,7 +2,7 @@ import React from 'react'
 import store from '../store'
 import {addTodoAction} from '../actions/index'
 
-export default ({}) => {
+export default () => {
   let input = null
   return  (
     <div>

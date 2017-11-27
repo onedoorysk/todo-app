@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import MyForm from './components/MyForm'
 import FilterButton from './components/FilterButton'
 import TodoList from './components/TodoList'
-import {selectedBtnAction} from './actions/index'
 import store from './store'
 
 class App extends Component {
